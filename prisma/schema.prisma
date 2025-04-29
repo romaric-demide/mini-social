@@ -21,4 +21,21 @@ model User {
   password  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  posts     Post[]
+}
+
+model Post {
+  id     String   @id @default(cuid())
+  text   String
+  images String[]
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  parentId String?
+  parent   Post?   @relation("PostReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies  Post[]  @relation("PostReplies")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
