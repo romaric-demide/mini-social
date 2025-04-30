@@ -1,4 +1,5 @@
 import PostForm from "@/components/post-form";
+import PostList from "@/components/post-list";
 import { text } from "stream/consumers";
 // import prisma from "@/lib/prisma";
 
@@ -27,7 +28,8 @@ export default async function Home() {
         </div>
       ))} */}
 
-      <PostForm post={post} />
+      <PostList type="gocho" />
+      {/* <PostForm post={post} /> */}
     </div>
   );
 }
