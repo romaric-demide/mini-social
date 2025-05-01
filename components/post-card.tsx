@@ -34,6 +34,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import LikeButton from "./like-button";
 
 export default function PostCard({ post }: { post: any }) {
   return (
@@ -162,9 +163,7 @@ export default function PostCard({ post }: { post: any }) {
 
         <div className="flex justify-between pt-2">
           <div className="space-x-2">
-            <Button variant={"outline"} size={"sm"}>
-              <HeartIcon /> 125k
-            </Button>
+          <LikeButton/>
             <Button variant={"outline"} size={"sm"}>
               <MessageCircleIcon /> 125k
             </Button>
