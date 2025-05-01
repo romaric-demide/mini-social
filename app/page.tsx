@@ -1,3 +1,5 @@
+import LikeButton from "@/components/like-button";
+import PostCard from "@/components/post-card";
 import PostForm from "@/components/post-form";
 import PostList from "@/components/post-list";
 import { text } from "stream/consumers";
@@ -28,8 +30,18 @@ export default async function Home() {
         </div>
       ))} */}
 
-      <PostList type="gocho" />
+      {/* <PostList type="gocho" />/ */}
       {/* <PostForm post={post} /> */}
+
+      <LikeButton />
+
+      <div className="mx-auto flex max-w-lg flex-col divide-y">
+        {Array.from({ length: 5 }).map((_, index) => (
+          <div key={index}>
+            <PostCard post={{ dmd: "fllflf" }} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
