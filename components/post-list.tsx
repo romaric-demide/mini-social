@@ -18,7 +18,8 @@ export default function PostList({ type }: { type: string }) {
   const isInView = useInView(ref);
 
   const posts = data?.flat() || [];
-  const isReachingEnd = !data?.[0]?.length || data[data.length - 1]?.length < PAGE_SIZE;
+  const isReachingEnd =
+    !data?.[0]?.length || data[data.length - 1]?.length < PAGE_SIZE;
   const isLoadingMore = isLoading || typeof data?.[size - 1] === "undefined";
 
   const { cache } = useSWRConfig();
