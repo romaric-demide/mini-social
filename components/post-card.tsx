@@ -35,6 +35,7 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 import LikeButton from "./like-button";
+import SaveButton from "./save-button";
 
 export default function PostCard({ post }: { post: any }) {
   return (
@@ -169,9 +170,7 @@ export default function PostCard({ post }: { post: any }) {
             </Button>
           </div>
 
-          <Button variant={"outline"} size={"sm"}>
-            <BookmarkIcon />
-          </Button>
+        <SaveButton/>
         </div>
       </div>
     </div>

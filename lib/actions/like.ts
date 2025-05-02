@@ -1,33 +1,37 @@
-"use server";
+"use server"
 
 import prisma from "../prisma";
 
-export async function toggleLike(postId: string) {
+
+export async function toggleInteraction(type: "LIKE" | "SAVE" | "HIDE", postId: string) {
   const userId = "cma1qsj4500007p0vnvw4huxk"; // À remplacer par session.user.id
 
-  const existingLike = await prisma.like.findUnique({
+  const existingInteraction = await prisma.interaction.findUnique({
     where: {
-      userId_postId: {
+      userId_postId_type: {
         userId,
         postId,
+        type,
       },
     },
   });
 
-  if (existingLike) {
-    await prisma.like.delete({
+  if (existingInteraction) {
+    await prisma.interaction.delete({
       where: {
-        userId_postId: {
+        userId_postId_type: {
           userId,
           postId,
+          type,
         },
       },
     });
   } else {
-    await prisma.like.create({
+    await prisma.interaction.create({
       data: {
         userId,
         postId,
+        type,
       },
     });
   }

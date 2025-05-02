@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import { Button } from "./ui/button";
 import { HeartIcon } from "lucide-react";
 import clsx from "clsx";
-import { toggleLike } from "@/lib/actions/like";
+import { toggleInteraction } from "@/lib/actions/like";
 
 export default function LikeButton({
   postId,
@@ -25,7 +25,7 @@ export default function LikeButton({
       disabled={isPending}
       onClick={() =>
         startTransition(async () => {
-          await toggleLike("cma2i03vw000d2l0wdcf5c8h4");
+          await toggleInteraction("LIKE", "cma2i03vw000d2l0wdcf5c8h4");
           setLiked((prev) => !prev);
           setLikes((prev) => prev + (liked ? -1 : 1));
         })

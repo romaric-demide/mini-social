@@ -15,14 +15,14 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  name      String?
-  email     String?  @unique
-  password  String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  posts     Post[]
-  likes     Like[]
+  id           String        @id @default(cuid())
+  name         String?
+  email        String?       @unique
+  password     String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  posts        Post[]
+  interactions Interaction[]
 }
 
 model Post {
@@ -33,23 +33,31 @@ model Post {
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  parentId String?
-  parent   Post?   @relation("PostReplies", fields: [parentId], references: [id], onDelete: Cascade)
-  replies  Post[]  @relation("PostReplies")
-  Like     Like[]
+  parentId     String?
+  parent       Post?         @relation("PostReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies      Post[]        @relation("PostReplies")
+  interactions Interaction[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model Like {
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+enum InteractionType {
+  LIKE
+  SAVE
+  HIDE
+}
 
-  postId String
+model Interaction {
+  type InteractionType
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
   post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String
 
   createdAt DateTime @default(now())
 
-  @@id([userId, postId])
+  @@id([userId, postId, type])
 }

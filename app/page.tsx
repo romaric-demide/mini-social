@@ -2,22 +2,48 @@ import LikeButton from "@/components/like-button";
 import PostCard from "@/components/post-card";
 import PostForm from "@/components/post-form";
 import PostList from "@/components/post-list";
+import prisma from "@/lib/prisma";
 import { text } from "stream/consumers";
 // import prisma from "@/lib/prisma";
 
 export default async function Home() {
-  // const post = await prisma.user.findMany();
+  const userId = "cma1qsj4500007p0vnvw4huxk";
 
-  const post = {
-    id: "cma2i03vw000d2l0wdcf5c8h4",
-    text: "ytruyturtetryt",
-    images: [
-      // "https://example.com/image1.jpg",
-      // "https://example.com/image2.jpg",
-    ],
-  };
+  const post = await prisma.post.findMany({
+    where: {
+      interactions: {
+        none: { userId, type: "HIDE" },
+      },
+    },
+
+    include: {
+      _count: {
+        select: {
+          interactions: {
+            where: { type: "LIKE" },
+          },
+        },
+      },
+
+      interactions: {
+        where: { userId },
+        select: { type: true },
+      },
+    },
+  });
+
+  // const post = {
+  //   id: "cma2i03vw000d2l0wdcf5c8h4",
+  //   text: "ytruyturtetryt",
+  //   images: [
+  //     // "https://example.com/image1.jpg",
+  //     // "https://example.com/image2.jpg",
+  //   ],
+  // };
+
   return (
     <div>
+      {JSON.stringify(post)}
       {/* {post.map((user) => (
         <div
           key={user.id}
