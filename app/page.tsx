@@ -9,28 +9,28 @@ import { text } from "stream/consumers";
 export default async function Home() {
   const userId = "cma1qsj4500007p0vnvw4huxk";
 
-  const post = await prisma.post.findMany({
-    where: {
-      interactions: {
-        none: { userId, type: "HIDE" },
-      },
-    },
+  // const post = await prisma.post.findMany({
+  //   where: {
+  //     interactions: {
+  //       none: { userId, type: "HIDE" },
+  //     },
+  //   },
 
-    include: {
-      _count: {
-        select: {
-          interactions: {
-            where: { type: "LIKE" },
-          },
-        },
-      },
+  //   include: {
+  //     _count: {
+  //       select: {
+  //         interactions: {
+  //           where: { type: "LIKE" },
+  //         },
+  //       },
+  //     },
 
-      interactions: {
-        where: { userId },
-        select: { type: true },
-      },
-    },
-  });
+  //     interactions: {
+  //       where: { userId },
+  //       select: { type: true },
+  //     },
+  //   },
+  // });
 
   // const post = {
   //   id: "cma2i03vw000d2l0wdcf5c8h4",
@@ -43,7 +43,7 @@ export default async function Home() {
 
   return (
     <div>
-      {JSON.stringify(post)}
+      {/* {JSON.stringify(post)} */}
       {/* {post.map((user) => (
         <div
           key={user.id}
