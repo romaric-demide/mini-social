@@ -37,7 +37,7 @@ import {
 import LikeButton from "./like-button";
 import SaveButton from "./save-button";
 
-export default function PostCard({ post }: { post: any }) {
+export default function PostCard({ post }: { post?: any }) {
   return (
     <div className="flex space-x-2 py-10">
       <div>
