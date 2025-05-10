@@ -15,14 +15,90 @@ datasource db {
 }
 
 model User {
-  id           String        @id @default(cuid())
-  name         String?
-  email        String?       @unique
-  password     String?
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  posts        Post[]
-  interactions Interaction[]
+  id            String    @id @default(cuid())
+  username      String    @unique
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  bio           String?
+
+  accounts  Account[]
+  sessions  Session[]
+  followers Follow[]  @relation("Following")
+  following Follow[]  @relation("Follower")
+  blockers  Block[]   @relation("Blocked")
+  blocked   Block[]   @relation("Blocker")
+  posts     Post[]
+  likes     Like[]
+  saves     Save[]
+  hides     Hide[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+}
+
+model Follow {
+  follower   User   @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+  followerId String
+
+  following   User   @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+  followingId String
+
+  createdAt DateTime @default(now())
+
+  @@id([followerId, followingId])
+}
+
+model Block {
+  blocker   User   @relation("Blocker", fields: [blockerId], references: [id], onDelete: Cascade)
+  blockerId String
+
+  blocked   User   @relation("Blocked", fields: [blockedId], references: [id], onDelete: Cascade)
+  blockedId String
+
+  createdAt DateTime @default(now())
+
+  @@id([blockerId, blockedId])
 }
 
 model Post {
@@ -30,27 +106,22 @@ model Post {
   text   String
   images String[]
 
-  userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
 
-  parentId     String?
-  parent       Post?         @relation("PostReplies", fields: [parentId], references: [id], onDelete: Cascade)
-  replies      Post[]        @relation("PostReplies")
-  interactions Interaction[]
+  parent   Post?   @relation("PostReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  parentId String?
+
+  replies Post[] @relation("PostReplies")
+  likes   Like[]
+  saves   Save[]
+  hides   Hide[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-enum InteractionType {
-  LIKE
-  SAVE
-  HIDE
-}
-
-model Interaction {
-  type InteractionType
-
+model Like {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 
@@ -59,5 +130,29 @@ model Interaction {
 
   createdAt DateTime @default(now())
 
-  @@id([userId, postId, type])
+  @@id([userId, postId])
+}
+
+model Save {
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String
+
+  createdAt DateTime @default(now())
+
+  @@id([userId, postId])
+}
+
+model Hide {
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String
+
+  createdAt DateTime @default(now())
+
+  @@id([userId, postId])
 }
