@@ -1,9 +1,12 @@
-import LikeButton from "@/components/like-button";
+// import LikeButton from "@/components/like-button";
 import Navbar from "@/components/navbar";
 import PostCard from "@/components/post-card";
-import prisma from "@/lib/prisma";
+import { Button } from "@/components/ui/button";
+import { auth, signIn } from "@/lib/auth";
+// import prisma from "@/lib/prisma";
 
 export default async function Home() {
+  const session = await auth()
   // const post = await prisma.post.findMany({
   //   where: {
   //     interactions: {
@@ -27,9 +30,22 @@ export default async function Home() {
   //   },
   // });
 
+  if (session?.user?.id) {
+    return JSON.stringify(session.user)
+  }
+
   return (
     <div>
-      <Navbar />
+      {/* <Navbar /> */}
+
+      <form
+        action={async () => {
+          "use server";
+          await signIn("google", { redirectTo: "/" });
+        }}
+      >
+        <Button type="submit">Signin with Google</Button>
+      </form>
       {/* {JSON.stringify(post)} */}
 
       <div className="mx-auto flex max-w-lg flex-col divide-y">

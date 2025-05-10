@@ -11,11 +11,11 @@ import {
 import Image from "next/image";
 import {
   Drawer,
-  DrawerClose,
+  // DrawerClose,
   DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
+  // DrawerDescription,
+  // DrawerFooter,
+  // DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
@@ -34,8 +34,8 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import LikeButton from "./like-button";
-import SaveButton from "./save-button";
+// import LikeButton from "./like-button";
+// import SaveButton from "./save-button";
 
 export default function PostCard({ post }: { post?: any }) {
   return (
@@ -164,13 +164,13 @@ export default function PostCard({ post }: { post?: any }) {
 
         <div className="flex justify-between pt-2">
           <div className="space-x-2">
-          <LikeButton/>
+          {/* <LikeButton/> */}
             <Button variant={"outline"} size={"sm"}>
               <MessageCircleIcon /> 125k
             </Button>
           </div>
 
-        <SaveButton/>
+        {/* <SaveButton/> */}
         </div>
       </div>
     </div>
