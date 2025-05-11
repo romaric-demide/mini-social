@@ -1,43 +1,37 @@
 // import LikeButton from "@/components/like-button";
 import Navbar from "@/components/navbar";
 import PostCard from "@/components/post-card";
+import PostList from "@/components/post-list";
 import { Button } from "@/components/ui/button";
 import { auth, signIn } from "@/lib/auth";
+import prisma from "@/lib/prisma";
 // import prisma from "@/lib/prisma";
 
 export default async function Home() {
-  const session = await auth()
-  // const post = await prisma.post.findMany({
-  //   where: {
-  //     interactions: {
-  //       none: { userId, type: "HIDE" },
-  //     },
-  //   },
+  const session = await auth();
 
-  //   include: {
-  //     _count: {
-  //       select: {
-  //         interactions: {
-  //           where: { type: "LIKE" },
-  //         },
-  //       },
-  //     },
+  async function getPosts(page: number) {
+    "use server";
+    const PAGE_SIZE = 7;
+    const offset = (page - 1) * PAGE_SIZE;
 
-  //     interactions: {
-  //       where: { userId },
-  //       select: { type: true },
-  //     },
-  //   },
-  // });
+    const posts = await prisma.post.findMany({
+      skip: offset,
+      take: PAGE_SIZE,
+      include: { user: true },
+    });
+
+    return posts;
+  }
 
   if (session?.user?.id) {
-    return JSON.stringify(session.user)
+    return JSON.stringify(session.user.username);
   }
 
   return (
     <div>
       {/* <Navbar /> */}
-
+      <PostList getPosts={getPosts} />
       <form
         action={async () => {
           "use server";

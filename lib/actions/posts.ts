@@ -83,3 +83,193 @@ export async function getPosts(type: string, page: number) {
 
   return posts;
 }
+
+import { getCurrentUserId } from "@/lib/auth";
+
+export async function getForYouPosts(page: number, pageSize: number) {
+  const userId = await getCurrentUserId();
+
+  return prisma.post.findMany({
+    where: {
+      user: {
+        following: { some: { followingId: userId } },
+        blockers: { none: { blockerId: userId } },
+        blocked: { none: { blockedId: userId } },
+      },
+      hides: { none: { userId } },
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          username: true,
+          image: true,
+          _count: { select: { followers: true, posts: true } },
+        },
+      },
+      _count: { select: { likes: true, replies: true } },
+      likes: { where: { userId }, select: { userId: true } },
+      saves: { where: { userId }, select: { userId: true } },
+    },
+    skip: (page - 1) * pageSize,
+    take: pageSize,
+    orderBy: { createdAt: "desc" },
+  });
+}
+
+export async function getFollowingPosts(page: number, pageSize: number) {
+  const userId = await getCurrentUserId();
+  return prisma.post.findMany({
+    where: {
+      user: {
+        followers: { some: { followerId: userId } },
+        blockers: { none: { blockerId: userId } },
+        blocked: { none: { blockedId: userId } },
+      },
+      hides: { none: { userId } },
+      parentId: null,
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          username: true,
+          image: true,
+          _count: { select: { followers: true, posts: true } },
+        },
+      },
+      _count: { select: { likes: true, replies: true } },
+      likes: { where: { userId }, select: { userId: true } },
+      saves: { where: { userId }, select: { userId: true } },
+    },
+    skip: (page - 1) * pageSize,
+    take: pageSize,
+    orderBy: { createdAt: "desc" },
+  });
+}
+
+export async function getLikedPosts(page: number, pageSize: number) {
+  const userId = await getCurrentUserId();
+
+  return prisma.post.findMany({
+    where: {
+      user: {
+        blockers: { none: { blockerId: userId } },
+        blocked: { none: { blockedId: userId } },
+      },
+      likes: { some: { userId } },
+      hides: { none: { userId } },
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          username: true,
+          image: true,
+          _count: { select: { followers: true, posts: true } },
+        },
+      },
+      _count: { select: { likes: true, replies: true } },
+      likes: { where: { userId }, select: { userId: true } },
+      saves: { where: { userId }, select: { userId: true } },
+    },
+    skip: (page - 1) * pageSize,
+    take: pageSize,
+    orderBy: { createdAt: "desc" },
+  });
+}
+
+export async function getSavedPosts(page: number, pageSize: number) {
+  const userId = await getCurrentUserId();
+
+  return prisma.post.findMany({
+    where: {
+      user: {
+        blockers: { none: { blockerId: userId } },
+        blocked: { none: { blockedId: userId } },
+      },
+      saves: { some: { userId } },
+      hides: { none: { userId } },
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          username: true,
+          image: true,
+          _count: { select: { followers: true, posts: true } },
+        },
+      },
+      _count: { select: { likes: true, replies: true } },
+      likes: { where: { userId }, select: { userId: true } },
+      saves: { where: { userId }, select: { userId: true } },
+    },
+    skip: (page - 1) * pageSize,
+    take: pageSize,
+    orderBy: { createdAt: "desc" },
+  });
+}
+
+export async function getUserPosts(
+  page: number,
+  pageSize: number,
+  targetUserId?: string,
+) {
+  const userId = await getCurrentUserId();
+
+  return prisma.post.findMany({
+    where: {
+      userId: targetUserId || userId,
+      hides: { none: { userId } },
+      user: {
+        blockers: { none: { blockerId: userId } },
+        blocked: { none: { blockedId: userId } },
+      },
+    },
+    include: {
+      user: {
+        select: {
+          id: true,
+          username: true,
+          image: true,
+          _count: { select: { followers: true, posts: true } },
+        },
+      },
+      _count: { select: { likes: true, replies: true } },
+      likes: { where: { userId }, select: { userId: true } },
+      saves: { where: { userId }, select: { userId: true } },
+    },
+    skip: (page - 1) * pageSize,
+    take: pageSize,
+    orderBy: { createdAt: "desc" },
+  });
+}
+
+
+
+export async function getReplyPosts(page: number, pageSize: number) { 
+  const userId = await getCurrentUserId(); 
+  
+  return prisma.post.findMany({ 
+    where: { 
+      parentId: { not: null }, // Récupérer les posts qui ont un parentId (ce sont des réponses)
+      hides: { none: { userId } }, // Exclure les posts masqués par l'utilisateur courant
+    }, 
+    include: { 
+      user: { 
+        select: { 
+          id: true, 
+          username: true, 
+          image: true, 
+          _count: { select: { followers: true, posts: true } }, 
+        }, 
+      }, 
+      _count: { select: { likes: true, replies: true } }, 
+      likes: { where: { userId }, select: { userId: true } }, 
+      saves: { where: { userId }, select: { userId: true } }, 
+    }, 
+    skip: (page - 1) * pageSize, 
+    take: pageSize, 
+    orderBy: { createdAt: "desc" }, 
+  }); 
+}
