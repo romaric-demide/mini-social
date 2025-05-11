@@ -30,7 +30,7 @@ export default async function Home() {
 
   return (
     <div>
-      {/* <Navbar /> */}
+      <Navbar />
       <PostList getPosts={getPosts} />
       <form
         action={async () => {
