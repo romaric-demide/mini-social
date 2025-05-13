@@ -19,3 +19,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
 });
+
+
+export async function getCurrentUserId() {
+  const userId = (await auth())?.user?.id;
+  if (!userId) throw new Error("Unauthorized");
+  return userId;
+}
