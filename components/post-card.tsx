@@ -27,7 +27,7 @@ type PostCardProps = {
 export default function PostCard({ post }: { post: PostCardProps }) {
   return (
     <div>
-      <div>Post Card</div>
+      <div>Post Card {post.text}</div>
     </div>
   );
 }
