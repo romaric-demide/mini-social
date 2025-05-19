@@ -1,9 +1,10 @@
 import PostCard from "@/components/post-card";
+import PostList from "@/components/post-list";
 import Image from "next/image";
-// import { getPosts } from "./_actions/posts";
+import { getPosts } from "./_actions/posts";
 
 export default async function Home() {
-  // const posts = await getPosts("following", 1, 2);
+  // const posts = await getPosts('user', 1, 2);
 
   // const fakePosts = [
   //   {
@@ -283,15 +284,190 @@ export default async function Home() {
         replies: 1,
       },
     },
+    {
+      id: "post_4",
+      text: "Troisième post, sans image.",
+      images: [
+        "https://sje25hcba2nnaaxl.public.blob.vercel-storage.com/MainBefore-SAA8uV3odbMA23hsfDPNTPXrF3F0Qv.jpg",
+        "https://sje25hcba2nnaaxl.public.blob.vercel-storage.com/MainBefore-SAA8uV3odbMA23hsfDPNTPXrF3F0Qv.jpg",
+        "https://sje25hcba2nnaaxl.public.blob.vercel-storage.com/MainBefore-SAA8uV3odbMA23hsfDPNTPXrF3F0Qv.jpg",
+      ],
+      createdAt: "2025-05-10T08:00:00Z",
+      updatedAt: "2025-05-10T08:00:00Z",
+      user: {
+        id: "user_3",
+        username: "charlie",
+        image: "https://randomuser.me/api/portraits/men/3.jpg",
+        followers: [{ followerId: userId }],
+        following: [{ followingId: userId }],
+        _count: {
+          followers: 7,
+          posts: 2,
+        },
+      },
+      likes: [],
+      saves: [],
+      _count: {
+        likes: 0,
+        replies: 1,
+      },
+    },
+    {
+      id: "post_5",
+      text: "Troisième post, sans image.",
+      images: [
+        "https://sje25hcba2nnaaxl.public.blob.vercel-storage.com/MainBefore-SAA8uV3odbMA23hsfDPNTPXrF3F0Qv.jpg",
+        "https://sje25hcba2nnaaxl.public.blob.vercel-storage.com/MainBefore-SAA8uV3odbMA23hsfDPNTPXrF3F0Qv.jpg",
+        "https://sje25hcba2nnaaxl.public.blob.vercel-storage.com/MainBefore-SAA8uV3odbMA23hsfDPNTPXrF3F0Qv.jpg",
+      ],
+      createdAt: "2025-05-10T08:00:00Z",
+      updatedAt: "2025-05-10T08:00:00Z",
+      user: {
+        id: "user_3",
+        username: "charlie",
+        image: "https://randomuser.me/api/portraits/men/3.jpg",
+        followers: [{ followerId: userId }],
+        following: [{ followingId: userId }],
+        _count: {
+          followers: 7,
+          posts: 2,
+        },
+      },
+      likes: [],
+      saves: [],
+      _count: {
+        likes: 0,
+        replies: 1,
+      },
+    },
+    {
+      id: "post_6",
+      text: "Troisième post, sans image.",
+      images: [
+        "https://sje25hcba2nnaaxl.public.blob.vercel-storage.com/MainBefore-SAA8uV3odbMA23hsfDPNTPXrF3F0Qv.jpg",
+        "https://sje25hcba2nnaaxl.public.blob.vercel-storage.com/MainBefore-SAA8uV3odbMA23hsfDPNTPXrF3F0Qv.jpg",
+        "https://sje25hcba2nnaaxl.public.blob.vercel-storage.com/MainBefore-SAA8uV3odbMA23hsfDPNTPXrF3F0Qv.jpg",
+      ],
+      createdAt: "2025-05-10T08:00:00Z",
+      updatedAt: "2025-05-10T08:00:00Z",
+      user: {
+        id: "user_3",
+        username: "charlie",
+        image: "https://randomuser.me/api/portraits/men/3.jpg",
+        followers: [{ followerId: userId }],
+        following: [{ followingId: userId }],
+        _count: {
+          followers: 7,
+          posts: 2,
+        },
+      },
+      likes: [],
+      saves: [],
+      _count: {
+        likes: 0,
+        replies: 1,
+      },
+    },
+    {
+      id: "post_7",
+      text: "Troisième post, sans image.",
+      images: [
+        "https://sje25hcba2nnaaxl.public.blob.vercel-storage.com/MainBefore-SAA8uV3odbMA23hsfDPNTPXrF3F0Qv.jpg",
+        "https://sje25hcba2nnaaxl.public.blob.vercel-storage.com/MainBefore-SAA8uV3odbMA23hsfDPNTPXrF3F0Qv.jpg",
+        "https://sje25hcba2nnaaxl.public.blob.vercel-storage.com/MainBefore-SAA8uV3odbMA23hsfDPNTPXrF3F0Qv.jpg",
+      ],
+      createdAt: "2025-05-10T08:00:00Z",
+      updatedAt: "2025-05-10T08:00:00Z",
+      user: {
+        id: "user_3",
+        username: "charlie",
+        image: "https://randomuser.me/api/portraits/men/3.jpg",
+        followers: [{ followerId: userId }],
+        following: [{ followingId: userId }],
+        _count: {
+          followers: 7,
+          posts: 2,
+        },
+      },
+      likes: [],
+      saves: [],
+      _count: {
+        likes: 0,
+        replies: 1,
+      },
+    },
+    {
+      id: "post_8",
+      text: "Troisième post, sans image.",
+      images: [
+        "https://sje25hcba2nnaaxl.public.blob.vercel-storage.com/MainBefore-SAA8uV3odbMA23hsfDPNTPXrF3F0Qv.jpg",
+        "https://sje25hcba2nnaaxl.public.blob.vercel-storage.com/MainBefore-SAA8uV3odbMA23hsfDPNTPXrF3F0Qv.jpg",
+        "https://sje25hcba2nnaaxl.public.blob.vercel-storage.com/MainBefore-SAA8uV3odbMA23hsfDPNTPXrF3F0Qv.jpg",
+      ],
+      createdAt: "2025-05-10T08:00:00Z",
+      updatedAt: "2025-05-10T08:00:00Z",
+      user: {
+        id: "user_3",
+        username: "charlie",
+        image: "https://randomuser.me/api/portraits/men/3.jpg",
+        followers: [{ followerId: userId }],
+        following: [{ followingId: userId }],
+        _count: {
+          followers: 7,
+          posts: 2,
+        },
+      },
+      likes: [],
+      saves: [],
+      _count: {
+        likes: 0,
+        replies: 1,
+      },
+    },
+    {
+      id: "post_9",
+      text: "Troisième post, sans image.",
+      images: [
+        "https://sje25hcba2nnaaxl.public.blob.vercel-storage.com/MainBefore-SAA8uV3odbMA23hsfDPNTPXrF3F0Qv.jpg",
+        "https://sje25hcba2nnaaxl.public.blob.vercel-storage.com/MainBefore-SAA8uV3odbMA23hsfDPNTPXrF3F0Qv.jpg",
+        "https://sje25hcba2nnaaxl.public.blob.vercel-storage.com/MainBefore-SAA8uV3odbMA23hsfDPNTPXrF3F0Qv.jpg",
+      ],
+      createdAt: "2025-05-10T08:00:00Z",
+      updatedAt: "2025-05-10T08:00:00Z",
+      user: {
+        id: "user_3",
+        username: "charlie",
+        image: "https://randomuser.me/api/portraits/men/3.jpg",
+        followers: [{ followerId: userId }],
+        following: [{ followingId: userId }],
+        _count: {
+          followers: 7,
+          posts: 2,
+        },
+      },
+      likes: [],
+      saves: [],
+      _count: {
+        likes: 0,
+        replies: 1,
+      },
+    },
   ];
 
+// if (posts) {
+//   return JSON.stringify(posts)
+// }
+
   return (
-    <div className="divide-y">
-      {fakePosts.map((post) => (
+    <div className="">
+      {/* {posts.map((post) => (
         <div key={post.id}>
           <PostCard post={post} />
+          
         </div>
-      ))}
+      ))} */}
+      <PostList type="user" />
+      gfhghfghf
     </div>
   );
 

@@ -5,32 +5,36 @@ import {
   Drawer,
   DrawerContent,
   DrawerTitle,
-  DrawerTrigger
+  DrawerTrigger,
 } from "@/components/ui/drawer";
 import {
   ChevronRightIcon,
   DotIcon,
   EllipsisIcon,
   MessageCircleIcon,
-  PlusIcon
+  PlusIcon,
 } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { LikeButton } from "./like-button";
 import { SaveButton } from "./save-button";
 import { Button } from "./ui/button";
+import { FollowButton } from "./follow-button";
+import { toggleHide } from "@/app/_actions/toggles";
 
 type PostCardProps = {
   post: {
     id: string;
     text: string;
     images: string[];
-    createdAt: string;
-    updatedAt: string;
+    userId: string;
+    parentId: string | null;
+    createdAt: Date;
+    updatedAt: Date;
     user: {
       id: string;
       username: string;
-      image: string;
+      image: string | null;
       followers: { followerId: string }[];
       following: { followingId: string }[];
       _count: {
@@ -45,22 +49,26 @@ type PostCardProps = {
       replies: number;
     };
   };
+  mutate?: any;
 };
 
 // const userId = "cmaocjf4k00001b0x89hhjowo";
 
-export default function PostCard({ post }: PostCardProps) {
+export default function PostCard({ post, mutate }: PostCardProps) {
   const [open, setOpen] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
+  const [pending, startTransition] = useTransition();
 
-  const isFollowing = post.user.followers.length > 0;
-  const isFollower = post.user.following.length > 0;
+  if (isHidden) {
+    return;
+  }
 
   return (
-    <div className="flex space-x-1.5 px-3 py-6">
+    <div className="flex space-x-1.5 border-b px-3 py-6">
       <div>
         <div className="relative">
           <Avatar className="size-10" onClick={() => setOpen(true)}>
-            <AvatarImage src={post.user.image} />
+            <AvatarImage src={post.user.image || ""} />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           {post.user.followers.length === 0 && (
@@ -77,10 +85,13 @@ export default function PostCard({ post }: PostCardProps) {
       <div className="flex-1">
         <div className="flex justify-between">
           <div className="flex">
-            <button className="font-bold" onClick={() => setOpen(true)}>
+            <button
+              className="font-[family-name:var(--font-geist-sans)] font-semibold"
+              onClick={() => setOpen(true)}
+            >
               @{post.user.username}
             </button>
-            <div className="text-muted-foreground flex items-center">
+            <div className="text-muted-foreground flex items-center text-sm">
               <DotIcon className="size-5" /> 4h
             </div>
           </div>
@@ -102,7 +113,17 @@ export default function PostCard({ post }: PostCardProps) {
                 <Button variant={"ghost"} className="text-base font-bold">
                   Delete
                 </Button>
-                <Button variant={"ghost"} className="text-base font-bold">
+                <Button
+                  variant="ghost"
+                  className="text-base font-bold"
+                  onClick={() =>
+                    startTransition(async () => {
+                      await toggleHide(post.id);
+                      setIsHidden(true);
+                      mutate();
+                    })
+                  }
+                >
                   Hide
                 </Button>
                 <Button variant={"ghost"} className="text-base font-bold">
@@ -114,11 +135,8 @@ export default function PostCard({ post }: PostCardProps) {
         </div>
 
         <div>
-          <div>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eius
-            obcaecati fuga perferendis consequuntur excepturi reiciendis debitis
-            illum nemo deserunt officia quasi voluptate, eveniet nulla. Cum
-            deleniti repellat voluptas libero nisi.
+          <div className="font-sans text-sm/relaxed tracking-wide">
+            {post.text}
           </div>
 
           <div className="flex aspect-square flex-wrap overflow-hidden rounded-lg">
@@ -164,7 +182,7 @@ export default function PostCard({ post }: PostCardProps) {
 
           <div className="space-y-3 p-6">
             <Avatar className="mx-auto size-30">
-              <AvatarImage src={post.user.image} />
+              <AvatarImage src={post.user.image || ""} />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
 
@@ -177,21 +195,13 @@ export default function PostCard({ post }: PostCardProps) {
             </div>
 
             <div className="flex space-x-2">
-              {!isFollowing && !isFollower && (
-                <Button className="flex-1">Follow</Button>
-              )}
-
-              {!isFollowing && isFollower && (
-                <Button className="flex-1">Follow Back</Button>
-              )}
-
-              {isFollowing && !isFollower && (
-                <Button className="flex-1">Unfollow</Button>
-              )}
-
-              {isFollowing && isFollower && (
-                <Button className="flex-1">Mutual</Button>
-              )}
+              <FollowButton
+                followingId={post.user.id}
+                initialFollowing={post.user.followers.length > 0}
+                label={
+                  post.user.following.length > 0 ? "Follow back" : "Follow"
+                }
+              />
 
               <Button variant={"secondary"} className="flex-1">
                 Profile <ChevronRightIcon />
