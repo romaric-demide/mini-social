@@ -4,7 +4,6 @@
 import prisma from "@/lib/prisma";
 
 import { z } from "zod";
-import { syncFiles } from "../blob";
 
 const userId = "cmaocjf4k00001b0x89hhjowo";
 
@@ -44,9 +43,9 @@ export async function upsertPost(
     });
 
     const toDelete = existing.images.filter((url) => !urls.includes(url));
-    newImageUrls = await syncFiles(files, toDelete);
+    // newImageUrls = await syncFiles(files, toDelete);
   } else {
-    newImageUrls = await syncFiles(files, []);
+    // newImageUrls = await syncFiles(files, []);
   }
 
   const post = await prisma.post.upsert({
@@ -72,22 +71,11 @@ export async function deletePost(id: string) {
     select: { images: true },
   });
 
-  await syncFiles([], images);
+  // await syncFiles([], images);
   await prisma.post.delete({ where: { id } });
 }
 
-export async function getPosts(type: string, page: number) {
-  const PAGE_SIZE = 7;
-  const offset = (page - 1) * PAGE_SIZE;
 
-  const posts = await prisma.post.findMany({
-    skip: offset,
-    take: PAGE_SIZE,
-    include: { user: true },
-  });
-
-  return posts;
-}
 
 export async function getPosts(
   type: PostType,
