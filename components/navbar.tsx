@@ -1,9 +1,23 @@
 "use client";
 
+import clsx from "clsx";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Button } from "./ui/button";
-import { Home, Search, Bell, User, Plus } from "lucide-react";
+import { buttonVariants } from "./ui/button";
+
+import {
+  BellIcon,
+  HomeIcon,
+  MagnifyingGlassIcon,
+  PlusIcon,
+  UserIcon,
+} from "@heroicons/react/24/outline";
+
+import {
+  BellIcon as BellIconSolid,
+  HomeIcon as HomeIconSolid,
+  UserIcon as UserIconSolid,
+} from "@heroicons/react/24/solid";
 
 const tabs = [
   { name: "For You", href: "/" },
@@ -11,46 +25,62 @@ const tabs = [
 ];
 
 const navLinks = [
-  { icon: Home, href: "/" },
-  { icon: Search, href: "/search" },
-  { icon: Plus, href: "/posts/new" },
-  { icon: Bell, href: "/notifications" },
-  { icon: User, href: "/profile" },
+  { icon: [HomeIcon, HomeIconSolid], href: "/" },
+  { icon: [MagnifyingGlassIcon, MagnifyingGlassIcon], href: "/search" },
+  { icon: [PlusIcon, PlusIcon], href: "/posts/new" },
+  { icon: [BellIcon, BellIconSolid], href: "/notifications" },
+  { icon: [UserIcon, UserIconSolid], href: "/profile" },
 ];
 
 export default function Navbar() {
   const pathname = usePathname();
 
   const showTabs = ["/", "/posts/following"].includes(pathname);
+  const showNavLinks = ["/", "/search", "/notifications", "/profile"].includes(
+    pathname,
+  );
 
   return (
     <div>
       {showTabs && (
         <div className="flex space-x-2">
           {tabs.map(({ name, href }) => (
-            <Button
+            <Link
               key={href}
-              size="sm"
-              variant={pathname === href ? "default" : "secondary"}
-              asChild
+              href={href}
+              className={buttonVariants({
+                variant: pathname === href ? "default" : "secondary",
+                size: "sm",
+              })}
             >
-              <Link href={href}>{name}</Link>
-            </Button>
+              {name}
+            </Link>
           ))}
         </div>
       )}
 
-      <div className="flex space-x-4">
-        {navLinks.map(({ icon: Icon, href }) => (
-          <Link href={href} key={href}>
-            <Icon
-              className={`h-5 w-5 ${
-                pathname === href ? "text-black" : "text-gray-400"
-              }`}
-            />
-          </Link>
-        ))}
-      </div>
+      {showNavLinks && (
+        <div className="bg-background fixed inset-x-0 bottom-0 z-10 flex h-12 items-center border-t">
+          {navLinks.map(({ icon: [OutlineIcon, SolidIcon], href }) => {
+            const isActive = pathname === href;
+            const Icon = isActive ? SolidIcon : OutlineIcon;
+
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={clsx(
+                  buttonVariants({ variant: "secondary" }),
+                  !isActive && "text-muted-foreground",
+                  "flex-1",
+                )}
+              >
+                <Icon className="size-6 stroke-2" />
+              </Link>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

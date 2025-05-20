@@ -3,67 +3,67 @@
 // import { getCurrentUserId } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 
-import { z } from "zod";
+// import { z } from "zod";
 
 const userId = "cmaocjf4k00001b0x89hhjowo";
 
-const postSchema = z.object({
-  text: z.string().min(1, "Le texte est requis"),
-  images: z.array(z.union([z.instanceof(File), z.string()])),
-});
+// const postSchema = z.object({
+//   text: z.string().min(1, "Le texte est requis"),
+//   images: z.array(z.union([z.instanceof(File), z.string()])),
+// });
 
-export async function upsertPost(
-  formData: FormData,
-  postId?: string,
-  parentId?: string,
-) {
-  const validation = postSchema.safeParse({
-    text: formData.get("text"),
-    images: formData.getAll("image"),
-  });
+// export async function upsertPost(
+//   formData: FormData,
+//   postId?: string,
+//   parentId?: string,
+// ) {
+//   const validation = postSchema.safeParse({
+//     text: formData.get("text"),
+//     images: formData.getAll("image"),
+//   });
 
-  if (!validation.success) {
-    return { error: validation.error.flatten().fieldErrors };
-  }
+//   if (!validation.success) {
+//     return { error: validation.error.flatten().fieldErrors };
+//   }
 
-  const { text, images } = validation.data;
-  const files = images.filter((img) => img instanceof File);
-  const urls = images.filter((img) => typeof img === "string");
+//   const { text, images } = validation.data;
+//   const files = images.filter((img) => img instanceof File);
+//   const urls = images.filter((img) => typeof img === "string");
 
-  let newImageUrls: string[] = [];
+//   let newImageUrls: string[] = [];
 
-  if (postId) {
-    const existing = await prisma.post.findUniqueOrThrow({
-      where: {
-        id: postId,
-        images: { hasEvery: urls },
-        userId: "cma1qsj4500007p0vnvw4huxk",
-      },
-      select: { images: true },
-    });
+//   if (postId) {
+//     const existing = await prisma.post.findUniqueOrThrow({
+//       where: {
+//         id: postId,
+//         images: { hasEvery: urls },
+//         userId: "cma1qsj4500007p0vnvw4huxk",
+//       },
+//       select: { images: true },
+//     });
 
-    const toDelete = existing.images.filter((url) => !urls.includes(url));
-    // newImageUrls = await syncFiles(files, toDelete);
-  } else {
-    // newImageUrls = await syncFiles(files, []);
-  }
+//     const toDelete = existing.images.filter((url) => !urls.includes(url));
+//     // newImageUrls = await syncFiles(files, toDelete);
+//   } else {
+//     // newImageUrls = await syncFiles(files, []);
+//   }
 
-  const post = await prisma.post.upsert({
-    where: { id: postId || "" },
-    update: {
-      text,
-      images: [...urls, ...newImageUrls],
-    },
-    create: {
-      text,
-      images: newImageUrls,
-      userId: "cma1qsj4500007p0vnvw4huxk",
-      parentId,
-    },
-  });
+//   const post = await prisma.post.upsert({
+//     where: { id: postId || "" },
+//     update: {
+//       text,
+//       images: [...urls, ...newImageUrls],
+//     },
+//     create: {
+//       text,
+//       images: newImageUrls,
+//       userId: "cma1qsj4500007p0vnvw4huxk",
+//       parentId,
+//     },
+//   });
 
-  return { post };
-}
+//   return { post };
+// }
 
 export async function deletePost(id: string) {
   const { images } = await prisma.post.findUniqueOrThrow({
