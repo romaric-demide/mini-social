@@ -36,26 +36,33 @@ export default function Navbar() {
   const pathname = usePathname();
 
   const showTabs = ["/", "/posts/following"].includes(pathname);
-  const showNavLinks = ["/", "/search", "/notifications", "/profile"].includes(
-    pathname,
-  );
+  const showNavLinks = [
+    "/",
+    "/posts/following",
+    "/search",
+    "/notifications",
+    "/profile",
+  ].includes(pathname);
 
   return (
     <div>
       {showTabs && (
-        <div className="flex space-x-2">
-          {tabs.map(({ name, href }) => (
-            <Link
-              key={href}
-              href={href}
-              className={buttonVariants({
-                variant: pathname === href ? "default" : "secondary",
-                size: "sm",
-              })}
-            >
-              {name}
-            </Link>
-          ))}
+        <div className="space-y-3 p-3">
+          <div className="text-center text-2xl font-extrabold">V12</div>
+          <div className="space-x-1.5">
+            {tabs.map(({ name, href }) => (
+              <Link
+                key={href}
+                href={href}
+                className={buttonVariants({
+                  variant: pathname === href ? "default" : "secondary",
+                  size: "sm",
+                })}
+              >
+                {name}
+              </Link>
+            ))}
+          </div>
         </div>
       )}
 
