@@ -75,8 +75,6 @@ export async function deletePost(id: string) {
   await prisma.post.delete({ where: { id } });
 }
 
-
-
 export async function getPosts(
   type: PostType,
   page: number,
