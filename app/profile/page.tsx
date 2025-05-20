@@ -2,5 +2,9 @@ import PostList from "@/components/post-list";
 import React from "react";
 
 export default function Profile() {
-  return <PostList type="user" />;
+  return (
+    <div className="py-16">
+      <PostList type="user" />
+    </div>
+  );
 }

@@ -1,9 +1,9 @@
 "use client";
 
+import { getPosts } from "@/app/_actions/posts";
+import { useInView } from "motion/react";
 import { useEffect, useRef } from "react";
 import useSWRInfinite from "swr/infinite";
-import { useInView } from "motion/react";
-import { getPosts } from "@/app/_actions/posts";
 import PostCard from "./post-card";
 
 type PostListProps = {
@@ -17,7 +17,7 @@ export default function PostList({
   userId,
   pageSize = 2,
 }: PostListProps) {
-  const { data, mutate, size, setSize, isLoading } = useSWRInfinite(
+  const { data, size, setSize, mutate, isLoading } = useSWRInfinite(
     (index) => ["posts", type, index + 1, userId],
     ([, , page]) => getPosts(type, page, pageSize, userId),
   );
@@ -33,27 +33,23 @@ export default function PostList({
     if (isInView && hasMore && !loadingMore) {
       setSize((prev) => prev + 1);
     }
-  }, [isInView, hasMore, loadingMore]);
+  }, [isInView, hasMore, loadingMore, setSize]);
 
   return (
     <div>
-      {!posts.length && !loadingMore && (
-        <p className="text-center text-gray-500">Aucun post à afficher.</p>
-      )}
+      {!posts.length && !loadingMore && <div>No posts found.</div>}
 
       {posts.map((post) => (
         <PostCard key={post.id} post={post} mutate={mutate} />
       ))}
 
-      {loadingMore && (
-        <p className="text-center text-sm text-gray-400">Chargement...</p>
-      )}
+      {loadingMore && <div>Loading...</div>}
 
       {!hasMore && !loadingMore && posts.length > 0 && (
-        <p className="text-center text-gray-500">Plus de posts à afficher.</p>
+        <div>No more posts.</div>
       )}
 
-      <div ref={loaderRef} className="h-10" />
+      <div ref={loaderRef} />
     </div>
   );
 }

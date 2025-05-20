@@ -139,7 +139,7 @@ export default function PostCard({ post, mutate }: PostCardProps) {
             {post.text}
           </div>
 
-          <div className="flex aspect-square flex-wrap overflow-hidden rounded-lg">
+          {/* <div className="flex aspect-square flex-wrap overflow-hidden rounded-lg">
             {post.images.map((img, i) => (
               <div
                 key={i}
@@ -154,7 +154,7 @@ export default function PostCard({ post, mutate }: PostCardProps) {
                 />
               </div>
             ))}
-          </div>
+          </div> */}
         </div>
 
         <div className="flex justify-between">
