@@ -4,7 +4,7 @@ import { getPosts } from "@/app/_actions/posts";
 import { useInView } from "motion/react";
 import { useEffect, useRef } from "react";
 import useSWRInfinite from "swr/infinite";
-import PostCard from "./post-card";
+import PostCard from "./PostCard";
 
 type PostListProps = {
   type: PostType;
@@ -17,7 +17,7 @@ export default function PostList({
   userId,
   pageSize = 2,
 }: PostListProps) {
-  const { data, size, setSize, mutate, isLoading } = useSWRInfinite(
+  const { data, size, setSize, isLoading, mutate } = useSWRInfinite(
     (index) => ["posts", type, index + 1, userId],
     ([, , page]) => getPosts(type, page, pageSize, userId),
   );

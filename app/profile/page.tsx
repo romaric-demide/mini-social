@@ -1,4 +1,4 @@
-import PostList from "@/components/post-list";
+import PostList from "@/components/PostList";
 import React from "react";
 
 export default function Profile() {

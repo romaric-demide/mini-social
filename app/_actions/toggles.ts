@@ -78,3 +78,35 @@ export async function toggleHide(postId: string) {
     await prisma.hide.create({ data: { userId, postId } });
   }
 }
+
+type ActionType = "like" | "save" | "hide";
+
+export async function toggleAction(action: ActionType, postId: string) {
+  const userId = "cmaocjf4k00001b0x89hhjowo";
+  const where = { userId_postId: { userId, postId } };
+
+  if (action === "like") {
+    const existing = await prisma.like.findUnique({ where });
+    if (existing) {
+      await prisma.like.delete({ where });
+    } else {
+      await prisma.like.create({ data: { userId, postId } });
+    }
+  } else if (action === "save") {
+    const existing = await prisma.save.findUnique({ where });
+    if (existing) {
+      await prisma.save.delete({ where });
+    } else {
+      await prisma.save.create({ data: { userId, postId } });
+    }
+  } else if (action === "hide") {
+    const existing = await prisma.hide.findUnique({ where });
+    if (existing) {
+      await prisma.hide.delete({ where });
+    } else {
+      await prisma.hide.create({ data: { userId, postId } });
+    }
+  } else {
+    throw new Error(`Unknown action: ${action}`);
+  }
+}

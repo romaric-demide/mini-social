@@ -1,4 +1,4 @@
-import PostList from "@/components/post-list";
+import PostList from "@/components/PostList";
 
 export default async function Home() {
   return <PostList type="forYou" />;
