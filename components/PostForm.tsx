@@ -65,6 +65,13 @@ export default function PostForm({ post }: PostFormProps) {
       setText("");
       setImages([]);
       
+
+      //   if (res.error) {
+    //     toast.error(Object.values(res.error).flat()[0]);
+    //     return;
+    //   }
+
+    
       toast.success(`Post ${post ? "updated" : "created"} successfully!`);
       redirect(`/profile/#${res.id}`);
     });
