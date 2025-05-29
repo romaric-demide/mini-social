@@ -39,9 +39,11 @@ export default function PostList({
     <div>
       {!posts.length && !loadingMore && <div>No posts found.</div>}
 
-      {posts.map((post) => (
-        <PostCard key={post.id} post={post} mutate={mutate} />
-      ))}
+      <div className="divide-y">
+        {posts.map((post) => (
+          <PostCard key={post.id} post={post} mutate={mutate} />
+        ))}
+      </div>
 
       {loadingMore && <div>Loading...</div>}
 

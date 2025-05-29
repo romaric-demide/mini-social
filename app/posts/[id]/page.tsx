@@ -1,5 +1,5 @@
 import { getPost } from "@/app/_actions/posts";
-import PostCard from "@/components/post-card";
+import PostCard from "@/components/PostCard";
 import { notFound } from "next/navigation";
 
 export default async function Post({

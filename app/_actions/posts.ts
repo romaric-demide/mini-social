@@ -1,77 +1,79 @@
 "use server";
 
-// import { getCurrentUserId } from "@/lib/auth";
+import { syncFiles } from "@/lib/fileSync";
 import prisma from "@/lib/prisma";
-
-// import { z } from "zod";
+import { z } from "zod";
 
 const userId = "cmaocjf4k00001b0x89hhjowo";
 
-// const postSchema = z.object({
-//   text: z.string().min(1, "Le texte est requis"),
-//   images: z.array(z.union([z.instanceof(File), z.string()])),
-// });
+const postSchema = z.object({
+  text: z.string().min(1, "Le texte est requis"),
+  images: z.array(z.union([z.instanceof(File), z.string()])),
+});
 
-// export async function upsertPost(
-//   formData: FormData,
-//   postId?: string,
-//   parentId?: string,
-// ) {
-//   const validation = postSchema.safeParse({
-//     text: formData.get("text"),
-//     images: formData.getAll("image"),
-//   });
+export async function createPost(formData: FormData, parentId?: string) {
+  const validation = postSchema.safeParse({
+    text: formData.get("text"),
+    images: formData.getAll("image"),
+  });
 
-//   if (!validation.success) {
-//     return { error: validation.error.flatten().fieldErrors };
-//   }
+  if (!validation.success) {
+    return { error: validation.error.flatten().fieldErrors };
+  }
 
-//   const { text, images } = validation.data;
-//   const files = images.filter((img) => img instanceof File);
-//   const urls = images.filter((img) => typeof img === "string");
+  const { text, images } = validation.data;
+  const files = images.filter((img) => img instanceof File);
 
-//   let newImageUrls: string[] = [];
+  const { id } = await prisma.post.create({
+    data: {
+      text,
+      images: await syncFiles(files, []),
+      userId,
+      parentId,
+    },
+  });
+  return { id };
+}
 
-//   if (postId) {
-//     const existing = await prisma.post.findUniqueOrThrow({
-//       where: {
-//         id: postId,
-//         images: { hasEvery: urls },
-//         userId: "cma1qsj4500007p0vnvw4huxk",
-//       },
-//       select: { images: true },
-//     });
+export async function updatePost(id: string, formData: FormData) {
+  const validation = postSchema.safeParse({
+    text: formData.get("text"),
+    images: formData.getAll("image"),
+  });
 
-//     const toDelete = existing.images.filter((url) => !urls.includes(url));
-//     // newImageUrls = await syncFiles(files, toDelete);
-//   } else {
-//     // newImageUrls = await syncFiles(files, []);
-//   }
+  if (!validation.success) {
+    return { error: validation.error.flatten().fieldErrors };
+  }
 
-//   const post = await prisma.post.upsert({
-//     where: { id: postId || "" },
-//     update: {
-//       text,
-//       images: [...urls, ...newImageUrls],
-//     },
-//     create: {
-//       text,
-//       images: newImageUrls,
-//       userId: "cma1qsj4500007p0vnvw4huxk",
-//       parentId,
-//     },
-//   });
+  const { text, images } = validation.data;
+  const files = images.filter((img) => img instanceof File);
+  const urls = images.filter((img) => typeof img === "string");
 
-//   return { post };
-// }
-
-export async function deletePost(id: string) {
-  const { images } = await prisma.post.findUniqueOrThrow({
-    where: { id },
+  const { images: existingImages } = await prisma.post.findUniqueOrThrow({
+    where: { id, images: { hasEvery: urls }, userId },
     select: { images: true },
   });
 
-  // await syncFiles([], images);
+  const toDelete = existingImages.filter((url) => !urls.includes(url));
+  const newImageUrls = await syncFiles(files, toDelete);
+
+  await prisma.post.update({
+    where: { id },
+    data: {
+      text,
+      images: [...urls, ...newImageUrls],
+    },
+  });
+  return { id };
+}
+
+export async function deletePost(id: string) {
+  const { images } = await prisma.post.findUniqueOrThrow({
+    where: { id, userId },
+    select: { images: true },
+  });
+
+  await syncFiles([], images);
   await prisma.post.delete({ where: { id } });
 }
 
