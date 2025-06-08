@@ -17,11 +17,11 @@ datasource db {
 model User {
   id            String    @id @default(cuid())
   username      String    @unique
-  email         String    @unique
   name          String?
-  bio           String?
-  image         String?
+  email         String    @unique
   emailVerified DateTime?
+  image         String?
+  bio           String?
 
   accounts  Account[]
   sessions  Session[]
@@ -60,7 +60,7 @@ model Account {
 }
 
 model Session {
-  sessionToken String   @unique
+  sessionToken String   @id
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)

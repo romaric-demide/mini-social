@@ -1,14 +1,21 @@
-import { signIn } from "@/lib/auth";
+import { auth, signIn } from "@/lib/auth";
 
-export default function SignIn() {
+export default async function SignIn() {
+  const session = await auth();
   return (
-    <form
-      action={async () => {
-        "use server";
-        await signIn("google");
-      }}
-    >
-      <button type="submit">Signin with Google</button>
-    </form>
+    <div>
+      {session?.user?.id ? (
+        JSON.stringify(session.user)
+      ) : (
+        <form
+          action={async () => {
+            "use server";
+            await signIn("google");
+          }}
+        >
+          <button type="submit">Signin with Google</button>
+        </form>
+      )}
+    </div>
   );
 }
